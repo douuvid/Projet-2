@@ -58,32 +58,21 @@
 
 import requests
 from bs4 import BeautifulSoup
+import csv
+
+nombres = {
+    "Zero": 0,
+    "One": 1,
+    "Two": 2,
+    "Three": 3,
+    "Four": 4,
+    "Five": 5
+}
+    
 #Phase 1) 
 # preparer le tableau
 veille_concurrentielle = [("product_page_url","universal_product_code (upc)", "title","price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url")]
 
-def retourner_la_cle_de_la_liste_a_partir_de_la_colonne_de_gauche(colonne_de_gauche):
-    # match colonne_de_gauche:
-    #     case "UPC": 
-    #         return 1
-    #     case "Price (incl. tax)":
-    #         return 3
-    #     case "Price (excl. tax)":
-    #         return 4
-    #     case "Availability":
-    #         return 5
-    #     case _: 
-    #         return Nonegti
-    if colonne_de_gauche == "UPC": 
-        return 1
-    elif colonne_de_gauche == "Price (incl. tax)":
-        return 3
-    elif colonne_de_gauche == "Price (excl. tax)":
-        return 4
-    elif colonne_de_gauche == "Availability":
-        return 5
-    else : 
-        return None
 
 # recupérer la page
 url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
@@ -91,17 +80,18 @@ url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
 r = requests.get(url)
 
 
+
 if r.ok:
 # vérifier que la page est bien
 
 
-    ligne = ["missing"] * len(veille_concurrentielle[0])
 #parcer
     soup = BeautifulSoup(r.text, 'html.parser')
 
 #Recuperer  
 # ● product_page_url
-    ligne[0] = url
+    product_page_url = url
+   
 
 
     #trs = soup.find_all("tr")
@@ -118,41 +108,86 @@ if r.ok:
         
 
 # ● title
-    ligne[2] = soup.find("h1").get_text()
+    title = soup.find(class_="product_main").h1.get_text()
+
+
+   
 
 
 # ● universal_ product_code (upc)
 # ● price_including_tax
 # ● price_excluding_tax
 # ● number_available
+    UPC, price_including_tax,price_excluding_tax, number_available = "Null","Null","Null","Null"
     trs = soup.find_all("tr")
-    
- 
     for tr in trs:
-        text_colonne_de_gauche = tr.find("th").get_text()
-        cle = retourner_la_cle_de_la_liste_a_partir_de_la_colonne_de_gauche(text_colonne_de_gauche)
-        if cle == None:
-            continue
-        colonne_de_droite = tr.find("td").get_text()
-        if cle == 5:
-            colonne_de_droite = colonne_de_droite.replace("In stock (", "").replace(" available)","")
-        if cle == 4 or cle == 3:
-            colonne_de_droite = colonne_de_droite[1:]
-        ligne[cle] = colonne_de_droite
+        legend = tr.find("th").get_text()
+        if legend == "UPC":
+            UPC = tr.find('td').get_text()
+        elif legend == "Price (incl. tax)":
+            price_including_tax = tr.find("td").get_text()[1:]
+            print(price_including_tax)
+        elif legend == "Price (excl. tax)":
+            price_excluding_tax = tr.find("td").get_text()[1:]
+        elif legend == "Availability":
+            number_available = tr.find("td").get_text().replace("In stock (", "").replace(" available)","")
+            
         
+    print( UPC, price_including_tax,price_excluding_tax, number_available)
+        
+            
+
+        
+    
+            
+            
         
 
+        
 
 # ● product_description
+    product_description = soup.find(class_ = "sub-header").nextSibling.nextSibling.get_text()
 
 # ● category
+    liens = soup.find(class_= "breadcrumb").find_all("a")
+    if len(liens) >= 3:
+        category = liens[2].get_text()
+    else:
+        category = "Null"
+    
+    
+    
+
 
 # ● review_rating
+    review = soup.find(class_= "star-rating")
+    classes = review["class"]
+    if len(classes) >= 2:
+        rating = classes[1]
+        if rating in nombres:
+            review_rating = nombres[rating]
+        else:
+            review= "null"
+    else:
+        review_rating = "Null"
+    
+        
+    
+    
+    
+
+
 
 # ● image_url
+    image = soup.find(class_ = "item active").find("img")
+    image_url = image["src"]
 
 
-    veille_concurrentielle.append(ligne)
+
+    veille_concurrentielle.append((product_page_url,UPC, title,price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url))
+    for v in veille_concurrentielle:
+        print(v)
+
 # Si la page est pas ok 
 
  
@@ -162,7 +197,9 @@ if r.ok:
 #   
 # Result
 
-for line in veille_concurrentielle:
-    print(line)
 
-# ---- FAIRE script p
+#csv
+    with open('veille_concurrentielle.csv', 'w', newline='') as csv_concurrentielle:
+        writer = csv.writer(csv_concurrentielle)
+        writer.writerows(veille_concurrentielle)
+        
