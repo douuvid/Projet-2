@@ -57,7 +57,7 @@
 
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup # Pour filtres les balises
 import csv
 
 nombres = {
@@ -89,7 +89,7 @@ if r.ok:
     soup = BeautifulSoup(r.text, 'html.parser')
 
 #Recuperer  
-# ● product_page_url
+# ● product_page_url (le lien)
     product_page_url = url
    
 
@@ -113,7 +113,7 @@ if r.ok:
 
    
 
-
+# Ils sont tous dans un tableau d'elements : 
 # ● universal_ product_code (upc)
 # ● price_including_tax
 # ● price_excluding_tax
@@ -122,7 +122,7 @@ if r.ok:
     trs = soup.find_all("tr")
     for tr in trs:
         legend = tr.find("th").get_text()
-        if legend == "UPC":
+        if legend == "UPC": # on compare
             UPC = tr.find('td').get_text()
         elif legend == "Price (incl. tax)":
             price_including_tax = tr.find("td").get_text()[1:]
