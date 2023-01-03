@@ -60,6 +60,8 @@ import requests
 from bs4 import BeautifulSoup # Pour filtres les balises
 import csv
 
+# Parser ==> extraire de la donne a parir du texte
+
 nombres = {
     "Zero": 0,
     "One": 1,
@@ -68,6 +70,7 @@ nombres = {
     "Four": 4,
     "Five": 5
 }
+
     
 #Phase 1) 
 # preparer le tableau
@@ -86,7 +89,7 @@ if r.ok:
 
 
 #parcer
-    soup = BeautifulSoup(r.text, 'html.parser')
+    soup = BeautifulSoup(r.content.decode('utf-8','ignore'), 'html.parser')
 
 #Recuperer  
 # ● product_page_url (le lien)
@@ -121,28 +124,19 @@ if r.ok:
     UPC, price_including_tax,price_excluding_tax, number_available = "Null","Null","Null","Null"
     trs = soup.find_all("tr")
     for tr in trs:
-        legend = tr.find("th").get_text()
+        legend = tr.find("th").get_text() #==> en fonction de la legende 
         if legend == "UPC": # on compare
             UPC = tr.find('td').get_text()
         elif legend == "Price (incl. tax)":
-            price_including_tax = tr.find("td").get_text()[1:]
-            print(price_including_tax)
+            price_including_tax = tr.find("td").get_text()
+            print(tr.find("td").get_text())
         elif legend == "Price (excl. tax)":
-            price_excluding_tax = tr.find("td").get_text()[1:]
+            price_excluding_tax = tr.find("td").get_text()
         elif legend == "Availability":
             number_available = tr.find("td").get_text().replace("In stock (", "").replace(" available)","")
             
         
     print( UPC, price_including_tax,price_excluding_tax, number_available)
-        
-            
-
-        
-    
-            
-            
-        
-
         
 
 # ● product_description
@@ -203,3 +197,9 @@ if r.ok:
         writer = csv.writer(csv_concurrentielle)
         writer.writerows(veille_concurrentielle)
         
+else:
+    print("Error")
+    
+    
+    
+    
