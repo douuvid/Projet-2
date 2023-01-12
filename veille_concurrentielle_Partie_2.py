@@ -28,7 +28,7 @@
 import requests
 from bs4 import BeautifulSoup # Pour filtres les balises
 import csv
-from scrapers import booktoscrape  # Quand j'ai deux fichier qui va porter deux noms de focntion
+#from scrapers import booktoscrape  # Quand j'ai deux fichier qui va porter deux noms de focntion
 
 from scrapers.booktoscrape import scrape_un_theme # Quand je dois utiliser une seule fonction ==>Uti cette methode<==
 
