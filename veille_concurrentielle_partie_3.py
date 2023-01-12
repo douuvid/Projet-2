@@ -54,10 +54,7 @@
 
 
 
-import requests
-from bs4 import BeautifulSoup # Pour filtres les balises
-import csv
-from scrapers import booktoscrape
+
 
 
 # Verifier si  ou je me trouve
@@ -66,3 +63,17 @@ from scrapers import booktoscrape
     
     
 # voir si la requete est valider ou pas 
+
+
+#Écrivez un script qui détermine si une chaîne contient ou non le caractère « e ».
+
+
+t1 = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+t2 = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre','Décembre']
+
+t3= " ".join(str(x) for x in t1)
+
+print(t3)
+
+
+
