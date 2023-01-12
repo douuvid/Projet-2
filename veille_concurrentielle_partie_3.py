@@ -53,27 +53,21 @@
 #3)pour arrive a l'obtif 
 
 
+import requests
+from bs4 import BeautifulSoup # Pour filtres les balises
+import csv
 
+from scrapers.booktoscrape import scrap_un_site
 
+url = "https://books.toscrape.com/index.html" # Site tout court
 
+site_entier = scrap_un_site(url)
 
-# Verifier si  ou je me trouve
-
-
-    
-    
-# voir si la requete est valider ou pas 
-
-
-#Écrivez un script qui détermine si une chaîne contient ou non le caractère « e ».
-
-
-t1 = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-t2 = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre','Décembre']
-
-t3= " ".join(str(x) for x in t1)
-
-print(t3)
-
+veille_concurrentielle = [("product_page_url","universal_product_code (upc)", "title","price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url")]
+if donnees != None and len(donnees) > 0:
+    with open('veille_concurrentielle.csv', 'w', newline='') as csv_concurrentielle:
+        writer = csv.writer(csv_concurrentielle)
+        veille_concurrentielle.extend(donnees)
+        writer.writerows(veille_concurrentielle)
 
 

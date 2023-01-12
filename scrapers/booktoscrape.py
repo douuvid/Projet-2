@@ -242,7 +242,7 @@ def recupere_page (url):
 
 
 def scrap_un_site(url):
-    info_site = []
+    info_site = {}
     r = requests.get(url)
     
     if r.ok:
@@ -254,14 +254,12 @@ def scrap_un_site(url):
             a = lien.find("a")
             #transformer un lien relatif en absolut
             lien_relatif = a["href"]
-            trans_lien_relatif_en_absolut
-            
-            
-            
-            
-            
-            resultat =scrape_un_theme(url)
-        return resultat
+            lien_absolu = trans_lien_relatif_en_absolut(url, lien_relatif)
+            resulat_scrape_theme = scrape_un_theme(lien_absolu)
+            info_site[a.get_text()] = resulat_scrape_theme # c'est un dictionnaire 
+            print(info_site)
+        
+        return info_site
             
             # mettre touts les liens dans un cv
             
