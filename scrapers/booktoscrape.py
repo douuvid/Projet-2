@@ -1,4 +1,5 @@
 import requests
+import time
 from bs4 import BeautifulSoup  # Pour filtres les balises
 
 nombres = {
@@ -10,7 +11,7 @@ nombres = {
         "Five": 5
     }
 
-def scrape_un_livre (url):
+def scrape_un_livre(url):
    
     r = requests.get(url)
 
@@ -21,7 +22,7 @@ def scrape_un_livre (url):
     
         title = soup.find(class_="product_main").h1.get_text()
 
-        UPC, price_including_tax,price_excluding_tax, number_available = "Pas à trouver","Pas à trouver","Pas à trouver","Pas à trouver"
+        UPC, price_including_tax,price_excluding_tax, number_available = None,None,None,None 
         trs = soup.find_all("tr")
         for tr in trs:
             legend = tr.find("th").get_text()
@@ -56,8 +57,13 @@ def scrape_un_livre (url):
         
         image = soup.find(class_ = "item active").find("img")
         image_url = image["src"]
-
-        return (product_page_url,UPC, title,price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url)
+        # utliser l'url de l'image pour recupere l'image avrec une methode + stock
+        image_url_absolu = trans_lien_relatif_en_absolu(product_page_url, image_url)
+        
+        
+        
+        
+        return (product_page_url,UPC, title,price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url_absolu)
         
     else:
         #print("Erreur pendant le scraping du livre " + url + " : erreur HTTP "+ str(r.status_code))
@@ -80,8 +86,6 @@ def scrape_des_livres(urls):
 
 
 
-
-
 def scrape_un_theme(url):
     # stocker les donner dans un tableau 
     info_livres= []
@@ -92,9 +96,9 @@ def scrape_un_theme(url):
                 #je fai sqqch 
                 # Si c'zt plus egale a none je faisautre chose 
                 
-                resultat = recupere_page(next)
-                next = resultat[1]
-                info_livres.extend(resultat[0])
+        resultat = recupere_page(next)
+        next = resultat[1]
+        info_livres.extend(resultat[0])
                 
     # date 2/01  :  Exo a faire pour le 9/01 
     # return scrape_un_theme_while(url) creer une autre un eboucle while (une conditoon pour boucle , tant que le bouton next )
@@ -105,95 +109,80 @@ def scrape_un_theme(url):
     return info_livres
                     
                     
-                    
-                    
-                    
-                    
-                    
-                    
     
+# def scrape_un_theme_recur_(url): 
+#     if len(url) == 0:
+#         return
     
-def scrape_un_theme_recur(url): 
-    if len(url) == 0:
-        return
-    
-    r = requests.get(url)
+#     r = requests.get(url)
 
-    if r.ok:
-    # vérifier que la page est bien
+#     if r.ok:
+#     # vérifier que la page est bien
 
-    #Je creer un tableau qui recup les url 
-        urls_livres = []
-    #parcer
-        soup = BeautifulSoup(r.content.decode('utf-8','ignore'), 'html.parser')
+#     #Je creer un tableau qui recup les url 
+#         urls_livres = []
+#     #parcer
+#         soup = BeautifulSoup(r.content.decode('utf-8','ignore'), 'html.parser')
 
-        liens_image = soup.find_all(class_="image_container")
+#         liens_image = soup.find_all(class_="image_container")
         
-        for i in liens_image: # Pour chaque elemement  ==> Ici, l'objectif est de recupere les liens 
-            a = i.find("a") # stocker le resultzt attendu 
-            urls_livres.append(a["href"].replace("../../../","http://books.toscrape.com/catalogue/"))# Le resultat attendu tu le renvoie dans ta 
-            #LES ATTRIVBUE SE LISENT COMME DES LISTES 
-        resultat = scrape_des_livres(urls_livres)
+#         for i in liens_image: # Pour chaque elemement  ==> Ici, l'objectif est de recupere les liens 
+#             a = i.find("a") # stocker le resultzt attendu 
+#             urls_livres.append(a["href"].replace("../../../","http://books.toscrape.com/catalogue/"))# Le resultat attendu tu le renvoie dans ta 
+#             #LES ATTRIVBUE SE LISENT COMME DES LISTES 
+#         resultat = scrape_des_livres(urls_livres)
 
-        next = soup.find(class_= "next") # Cette partie traite de next 
-        if next != None:
-            lien = next.find("a")["href"]
+#         next = soup.find(class_= "next") # Cette partie traite de next 
+#         if next != None:
+#             lien = next.find("a")["href"]
             
             
-            #  date 2/01  :  Exo a faire pour le 9/01 
-            # Changer utiliser les methode dans str() pour aider  https://docs.python.org/fr/3/library/stdtypes.html#text-sequence-type-str
-            # 1° tout lire a partir Méthodes de chaînes de caractères sauf le case/center(ne pas lire ) ; lire la cont+ endw + find + format + index + lire is mais ne pas s'y att + join+ strip+ replace + rfind  ==> Tout ca sera uti dans le parcours +split +strip
-            #2 ===> Permet d'eco des lignes + permet de supprimer la boucle fort 
-            #3° Faire des exo perso 
-            #4 essayer de trouvr 3 maniere de rempl la boucle for  avec les methode
-            #   Une maniere qui utili find ou rfind ( commence par la droite) 
+#             #  date 2/01  :  Exo a faire pour le 9/01 
+#             # Changer utiliser les methode dans str() pour aider  https://docs.python.org/fr/3/library/stdtypes.html#text-sequence-type-str
+#             # 1° tout lire a partir Méthodes de chaînes de caractères sauf le case/center(ne pas lire ) ; lire la cont+ endw + find + format + index + lire is mais ne pas s'y att + join+ strip+ replace + rfind  ==> Tout ca sera uti dans le parcours +split +strip
+#             #2 ===> Permet d'eco des lignes + permet de supprimer la boucle fort 
+#             #3° Faire des exo perso 
+#             #4 essayer de trouvr 3 maniere de rempl la boucle for  avec les methode
+#             #   Une maniere qui utili find ou rfind ( commence par la droite) 
             
-            
-            
-            #Split et join
-            
-            
+#             #Split et join
         
-            while next != None:
-                #je fai sqqch 
-                # Si c'zt plus egale a none je faisautre chose 
+#             while next != None:
+#                 #je fai sqqch 
+#                 # Si c'zt plus egale a none je faisautre chose 
                 
-                next = recupere_page(url)[1]
-                print(next)
+#                 next = recupere_page(url)[1]
             
             
-            
-                
-            
-            # utiliser 
-            #join(iterable) :
-            # Renvoie une chaîne qui est la concaténation des chaînes contenues dans iterable. Une TypeError sera levée si une valeur d'iterable n'est pas une chaîne, y compris pour les objets bytes. Le séparateur entre les éléments est la chaîne fournissant cette méthode.
+#             # utiliser 
+#             #join(iterable) :
+#             # Renvoie une chaîne qui est la concaténation des chaînes contenues dans iterable. Une TypeError sera levée si une valeur d'iterable n'est pas une chaîne, y compris pour les objets bytes. Le séparateur entre les éléments est la chaîne fournissant cette méthode.
 
             
             
-            # Avantage / inconveniant 
-            # des fonction recur
-                # Rapp une methode augmente la stack, utilise plus de memoire 
-                # recherche les avantage inco 
-                # Savoir faire les deux pour pouvoir fair el emeilleur choix car impacte dur la memoire
+#             # Avantage / inconveniant 
+#             # des fonction recur
+#                 # Rapp une methode augmente la stack, utilise plus de memoire 
+#                 # recherche les avantage inco 
+#                 # Savoir faire les deux pour pouvoir fair el emeilleur choix car impacte dur la memoire
             
         
-            #for index in range(len(url)-1, -1, -1): # star, stop, step => len affiche la laongueur du tableau et range reitere
-               # if url [index] == '/':
-                 #   lien_remplace = url[0:index+1] + lien 
-                  #  donnees = scrape_un_theme(lien_remplace)
-                   # if donnees != None and len(donnees) > 0 :
-                   #     resultat.extend(donnees)
-                   # break
+#             #for index in range(len(url)-1, -1, -1): # star, stop, step => len affiche la laongueur du tableau et range reitere
+#                # if url [index] == '/':
+#                  #   lien_remplace = url[0:index+1] + lien 
+#                   #  donnees = scrape_un_theme(lien_remplace)
+#                    # if donnees != None and len(donnees) > 0 :
+#                    #     resultat.extend(donnees)
+#                    # break
                    
-        return(resultat)
-    else:
-        print("Erreur pendant le scraping de la page " + url + " : erreur HTTP "+ str(r.status_code))
+#         return resultat
+#     else:
+#         raise Exception("Erreur pendant le scraping de la page " + url + " : erreur HTTP "+ str(r.status_code))
         
         
 
 def recupere_page (url):
-    lien_recolle = None
+    lien_absolu = None
     
     if len(url) == 0:
         raise Exception("Erreur pendant le scraping du livre : url est vide ") #Quand y a une erreur 
@@ -212,21 +201,18 @@ def recupere_page (url):
         
         for i in liens_image: # Pour chaque elemement  ==> Ici, l'objectif est de recupere les liens 
             a = i.find("a") # stocker le resultzt attendu 
-            urls_livres.append(a["href"].replace("../../../","http://books.toscrape.com/catalogue/"))# Le resultat attendu tu le renvoie dans ta 
+            urls_livres.append(trans_lien_relatif_en_absolu(url, a["href"]))# Le resultat attendu tu le renvoie dans ta 
             #LES ATTRIVBUE SE LISENT COMME DES dico
         resultat = scrape_des_livres(urls_livres)
         next = soup.find(class_= "next") # Cette partie traite de next 
         if next != None:
-            lien = next.find("a")["href"]
-            lien_coupe_par_la_droite = url.rsplit("/",maxsplit=1)
-                # tant que le bouton next exite concatene 
-            lien_coupe_par_la_droite[1] = lien
-            lien_recolle = "/".join(lien_coupe_par_la_droite)
+            lien_relatif = next.find("a")["href"]
+            lien_absolu = trans_lien_relatif_en_absolu (url, lien_relatif)
             
         
   
             
-        return resultat, lien_recolle
+        return resultat, lien_absolu
     
     
     
@@ -236,10 +222,6 @@ def recupere_page (url):
     
 
     
-    
-
-
-
 
 def scrap_un_site(url):
     info_site = {}
@@ -248,26 +230,18 @@ def scrap_un_site(url):
     if r.ok:
         #utiliser soup pour trouver des element 
         soup = BeautifulSoup(r.content.decode('utf-8','ignore'), 'html.parser')
-        liens = soup.find(class_ = "nav nav-list")
-        for lien in liens:
+        liens = soup.find(class_ = "nav nav-list").find_all("a")
+        for a in liens:
             
-            a = lien.find("a")
             #transformer un lien relatif en absolut
             lien_relatif = a["href"]
-            lien_absolu = trans_lien_relatif_en_absolut(url, lien_relatif)
+            lien_absolu = trans_lien_relatif_en_absolu(url, lien_relatif)
             resulat_scrape_theme = scrape_un_theme(lien_absolu)
-            info_site[a.get_text()] = resulat_scrape_theme # c'est un dictionnaire 
-            print(info_site)
-        
+            info_site[a.get_text().strip()] = resulat_scrape_theme # c'est un dictionnaire
+            # print(a.get_text())
         return info_site
-            
-            # mettre touts les liens dans un cv
-            
-            
-            
-        
-   
-        
+    
+            # mettre touts les liens dans un cv     
     else:
         raise Exception("Erreur pendant le scraping du site "+ url)
         
@@ -276,13 +250,14 @@ def scrap_un_site(url):
 #pour chaquz lien lien un csv 
 
 
-def trans_lien_relatif_en_absolut (url, lien_relatif):
+def trans_lien_relatif_en_absolu (url, lien_relatif):
     
     url_split = url.split("/")
     # Renvo
     url_split = url_split[:-1]
+    lien_relatif_split = lien_relatif.split("/")
     # cherche le possiblite
-    for split in url_split:
+    for split in lien_relatif_split:
         if split == ".":
             continue
         elif split == "..":
@@ -291,6 +266,27 @@ def trans_lien_relatif_en_absolut (url, lien_relatif):
             url_split.append(split)
         
 
-    lien_absolut = "/".join(url_split)
+    lien_absolu = "/".join(url_split)
+    return lien_absolu
+
+
     
-    return lien_absolut 
+def recup_image(url, dossier_image):
+
+    r = requests.get(url)
+
+    if r.ok:
+        image_recus = r.content #
+        url_split = url.split("/")
+        nom_de_fichier = url_split[-1]
+        with open(dossier_image+"/"+ nom_de_fichier , 'wb') as fichier_image:
+            fichier_image.write(image_recus)
+            
+        
+        
+    else:
+        raise Exception("Aucune photo trouver ")
+            
+            
+    # une fois qu'on a les liens on les stock 
+    # on les bala,ce dans le dossier 

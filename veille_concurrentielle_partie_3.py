@@ -61,13 +61,22 @@ from scrapers.booktoscrape import scrap_un_site
 
 url = "https://books.toscrape.com/index.html" # Site tout court
 
-site_entier = scrap_un_site(url)
-
-veille_concurrentielle = [("product_page_url","universal_product_code (upc)", "title","price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url")]
-if donnees != None and len(donnees) > 0:
-    with open('veille_concurrentielle.csv', 'w', newline='') as csv_concurrentielle:
-        writer = csv.writer(csv_concurrentielle)
-        veille_concurrentielle.extend(donnees)
-        writer.writerows(veille_concurrentielle)
+donnees = scrap_un_site(url)
 
 
+    
+
+for type in donnees:
+    donnees_livres = donnees[type]
+    veille_concurrentielle = [("product_page_url","universal_product_code (upc)", "title","price_including_tax", "price_excluding_tax", "number_available", "product_description", "category", "review_rating", "image_url")]
+    if len(donnees_livres) > 0:
+        with open('veille_concurrentielle_'+ type +'.csv', 'w', newline='') as csv_concurrentielle:
+            writer = csv.writer(csv_concurrentielle) # --> class class csv.DictWriter utilise un dictionnaire https://docs.python.org/3/library/csv.html
+            veille_concurrentielle.extend(donnees[type])
+            writer.writerows(veille_concurrentielle)
+
+
+
+
+#Utiliser scrap une page pour faire-- test  le cvs de la partie 3
+#

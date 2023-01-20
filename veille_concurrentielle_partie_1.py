@@ -129,16 +129,15 @@ if r.ok:
             UPC = tr.find('td').get_text()
         elif legend == "Price (incl. tax)":
             price_including_tax = tr.find("td").get_text()
-            print(tr.find("td").get_text())
+            # print(tr.find("td").get_text())
         elif legend == "Price (excl. tax)":
             price_excluding_tax = tr.find("td").get_text()
         elif legend == "Availability":
             number_available = tr.find("td").get_text().replace("In stock (", "").replace(" available)","")
             
         
-    print( UPC, price_including_tax,price_excluding_tax, number_available)
+    # print( UPC, price_including_tax,price_excluding_tax, number_available)
         
-
 # ● product_description
     product_description = soup.find(class_ = "sub-header").nextSibling.nextSibling.get_text()
 
@@ -149,9 +148,6 @@ if r.ok:
     else:
         category = "Null"
     
-    
-    
-
 
 # ● review_rating
     review = soup.find(class_= "star-rating")
@@ -165,13 +161,7 @@ if r.ok:
     else:
         review_rating = "Null"
     
-        
     
-    
-    
-
-
-
 # ● image_url
     image = soup.find(class_ = "item active").find("img")
     image_url = image["src"]
@@ -179,8 +169,8 @@ if r.ok:
 
 
     veille_concurrentielle.append((product_page_url,UPC, title,price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url))
-    for v in veille_concurrentielle:
-        print(v)
+    # for v in veille_concurrentielle:
+    #     print(v)
 
 # Si la page est pas ok 
 
