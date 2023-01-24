@@ -1,5 +1,6 @@
 import requests
 import time
+import os
 from bs4 import BeautifulSoup  # Pour filtres les balises
 
 nombres = {
@@ -279,7 +280,7 @@ def recup_image(url, dossier_image):
         image_recus = r.content #
         url_split = url.split("/")
         nom_de_fichier = url_split[-1]
-        with open(dossier_image+"/"+ nom_de_fichier , 'wb') as fichier_image:
+        with open(os.path.join(dossier_image, nom_de_fichier) , 'wb') as fichier_image:
             fichier_image.write(image_recus)
             
         

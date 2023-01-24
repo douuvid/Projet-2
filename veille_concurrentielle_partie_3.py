@@ -53,13 +53,24 @@
 #3)pour arrive a l'obtif 
 
 
+import logging # permet de faire des log
+import os
 import requests
 from bs4 import BeautifulSoup # Pour filtres les balises
 import csv
+import sys
 
 from scrapers.booktoscrape import scrap_un_site
 
 url = "https://books.toscrape.com/index.html" # Site tout court
+directory = "csv"
+parent_dir = '/Users/davidravin/Desktop/Oρᥱᥒᥴᥣᥲssroom/Test/csv' # chemin  absolu (qui part de la racine de votre système de fichier )
+
+
+# path = os.path.join(output_path, directory)
+output_path = sys.argv[0]
+path = os.path.join(output_path, directory)
+print(output_path)
 
 donnees = scrap_un_site(url)
 
@@ -76,7 +87,3 @@ for type in donnees:
             writer.writerows(veille_concurrentielle)
 
 
-
-
-#Utiliser scrap une page pour faire-- test  le cvs de la partie 3
-#
