@@ -64,7 +64,7 @@ from scrapers.booktoscrape import scrap_un_site
 
 url = "https://books.toscrape.com/index.html" # Site tout court
 directory = "csv"
-parent_dir = '/Users/davidravin/Desktop/Oρᥱᥒᥴᥣᥲssroom/Test/csv' # chemin  absolu (qui part de la racine de votre système de fichier )
+parent_dir = '/Users/davidravin/Desktop/Opᥱᥒᥴᥣᥲssroom/Test/csv' # chemin  absolu (qui part de la racine de votre système de fichier )
 
 
 # path = os.path.join(output_path, directory)
