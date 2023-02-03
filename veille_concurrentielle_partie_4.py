@@ -24,7 +24,18 @@ import csv
 import sys
 
 from scrapers.booktoscrape import scrap_un_site, recup_image
-output_path = sys.argv[1]
+
+
+if len(sys.argv) >= 2:
+    output_path = sys.argv[1]
+    
+else:
+    raise Exception (" Merci de preciser le  dossier dans lequel vous voulez stocker le resultat ")
+
+
+
+
+
 
 
 logging.basicConfig(level=logging.INFO)#configure le module logging
