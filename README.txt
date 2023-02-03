@@ -14,6 +14,8 @@ Pour créer l'environnement:
     Une fois activé sur votre terminal taper  
     pip install -r requirements.txt 
 
+Pour lancee le code python  veille_concurrentielle_partie_4.py
+
 
 
 
