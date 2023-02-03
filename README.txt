@@ -5,7 +5,7 @@ Pour créer l'environnement:
     lancer le terminal
 
     
-    Vous avez la possiblite de choisir votre nom mais par confontion j'utiliserai env
+    Vous avez la possiblite de choisir votre nom mais par convention j'utiliserai env
     taper dans le terminal 
     python -m venv env
 
@@ -13,9 +13,6 @@ Pour créer l'environnement:
     source env/bin/activate
     Une fois activé sur votre terminal taper  
     pip install -r requirements.txt 
-
-Pour lancee le code python  veille_concurrentielle_partie_4.py
-
 
 
 
